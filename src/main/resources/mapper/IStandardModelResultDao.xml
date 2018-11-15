@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jylink.bi.dao.IStandardModelResultDao">
+
+    <select id="getStandardModelResult" parameterType="standardModelResult" resultType="standardModelResult">
+        <choose>
+            <when test="patrolType == 1">
+                select * from regularly_model_result where taskId=#{taskId}
+            </when>
+            <otherwise>
+                select * from patrol_model_result where taskId=#{taskId}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getStandardModelResultDetail" parameterType="standardModelResult"
+            resultType="standardModelResultDetail">
+        <choose>
+            <when test="patrolType == 1">
+                select * from regularly_model_result_detail where mainId=#{uuid}
+            </when>
+            <otherwise>
+                select * from patrol_model_result_detail where mainId=#{uuid}
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="SaveStandardModelResult" parameterType="standardModelResult" useGeneratedKeys="true" keyColumn="uuid"
+            keyProperty="uuid">
+        <choose>
+            <when test="taskType == 1">
+                insert into regularly_model_result
+                (orgCode,date,taskId,belongCode,modelCode,modelAlgorithm,assessScore,assessGrade,topTaskId,resultType)
+                values(#{orgCode},#{date},#{taskId},#{belongCode},#{modelCode},#{modelAlgorithm},#{assessScore},#{assessGrade},#{topTaskId},#{resultType})
+            </when>
+            <otherwise>
+                insert into patrol_model_result
+                (orgCode,date,taskId,belongCode,modelCode,modelAlgorithm,assessScore,assessGrade,topTaskId,resultType)
+                values(#{orgCode},#{date},#{taskId},#{belongCode},#{modelCode},#{modelAlgorithm},#{assessScore},#{assessGrade},#{topTaskId},#{resultType})
+            </otherwise>
+        </choose>
+    </insert>
+
+    <insert id="SaveStandardModelResultDetails">
+        <choose>
+            <when test="taskType == 1">
+                <foreach collection="standardModelDetails" item="smr" separator=";">
+                    insert into
+                    regularly_model_result_detail(standardCode,standardValue,piecewiseValue,proportion,standardLevel,standardParentCode,assessScore,assessGrade,mainId,standardName)
+                    values(#{smr.standardCode},#{smr.standardValue},
+                    <choose>
+                        <when test="smr.piecewiseValue == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.piecewiseValue},
+                        </otherwise>
+                    </choose>
+                    <choose>
+                        <when test="smr.proportion == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.proportion},
+                        </otherwise>
+                    </choose>
+                    <choose>
+                        <when test="smr.standardLevel == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.standardLevel},
+                        </otherwise>
+                    </choose>
+                    #{smr.standardParentCode},
+                    <choose>
+                        <when test="smr.assessScore == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.assessScore},
+                        </otherwise>
+                    </choose>
+                    #{smr.assessGrade},#{smr.mainId},#{smr.standardName})
+                </foreach>
+            </when>
+            <otherwise>
+                <foreach collection="standardModelDetails" item="smr" separator=";">
+                    insert into
+                    patrol_model_result_detail(standardCode,standardValue,piecewiseValue,proportion,standardLevel,standardParentCode,assessScore,assessGrade,mainId,standardName)
+                    values(#{smr.standardCode},#{smr.standardValue},
+                    <choose>
+                        <when test="smr.piecewiseValue == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.piecewiseValue},
+                        </otherwise>
+                    </choose>
+                    <choose>
+                        <when test="smr.proportion == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.proportion},
+                        </otherwise>
+                    </choose>
+                    <choose>
+                        <when test="smr.standardLevel == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.standardLevel},
+                        </otherwise>
+                    </choose>
+                    #{smr.standardParentCode},
+                    <choose>
+                        <when test="smr.assessScore == null">
+                            0,
+                        </when>
+                        <otherwise>
+                            #{smr.assessScore},
+                        </otherwise>
+                    </choose>
+                    #{smr.assessGrade},#{smr.mainId},#{smr.standardName})
+                </foreach>
+            </otherwise>
+        </choose>
+    </insert>
+</mapper>

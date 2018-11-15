@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: root
+    password: root
+#allowMultiQueries=true支持一次执行多条更新
+    url: jdbc:mysql://localhost/jy_crewp_warehouse?allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+#配置mybatis的mapper映射文件以及别名设置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: cn.jylink.bi.model
+
+server:
+  port: 8088

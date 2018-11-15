@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jylink.bi.dao.IInitialValueDao">
+
+    <select id="getNewestInitialValueList" parameterType="string" resultType="initialValue">
+       select orgCode,date,standardCode,standardValue,standardName
+       from initial_regularly_value
+       where date=(
+        select max(date)
+        from initial_regularly_value
+        where 1=1
+        <if test="_parameter != null">
+              and orgCode = #{orgCode})
+            union
+            select orgCode,date,standardCode,standardValue,standardName
+            from initial_fact_value where 1=1
+            and orgCode = #{orgCode}
+        </if>
+
+    </select>
+</mapper>
